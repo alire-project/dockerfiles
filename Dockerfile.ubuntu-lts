@@ -1,0 +1,6 @@
+# Dockerfile for Ubuntu LTS with gnat + gprbuild
+
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y gnat gprbuild
