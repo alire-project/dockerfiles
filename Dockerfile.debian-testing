@@ -3,4 +3,11 @@
 FROM debian:testing
 
 RUN apt-get update && \
-    apt-get install -y gnat gprbuild
+    apt-get install -y \
+        bash \
+        git \
+        gnat \
+        gprbuild \
+        lsb-release \
+        mercurial \
+        subversion

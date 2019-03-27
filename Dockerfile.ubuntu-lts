@@ -1,6 +1,14 @@
-# Dockerfile for Ubuntu LTS with gnat + gprbuild
+# Dockerfile for Ubuntu LTS GNAT
 
-FROM ubuntu:latest
+# latest is actually latest LTS
+FROM ubuntu:latest  
 
 RUN apt-get update && \
-    apt-get install -y gnat gprbuild
+    apt-get install -y \
+        bash \
+        git \
+        gnat \
+        gprbuild \
+        lsb-release \
+        mercurial \
+        subversion
