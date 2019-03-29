@@ -10,4 +10,5 @@ RUN apt-get update && \
         gprbuild \
         lsb-release \
         mercurial \
-        subversion
+        subversion && \
+    apt-get clean

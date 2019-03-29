@@ -1,0 +1,17 @@
+# Dockerfile for Community 2018 edition (on debian)
+
+# GPL 2018 has no headless installation mode, so
+# it is simpler to reuse the slim version by reznik,
+# although regular installs will have the components
+# removed by reznik.
+
+FROM reznik/gnat:gpl.2018.slim
+
+RUN apt-get update && \
+    apt-get install -y \
+        bash \
+        git \
+        lsb-release \
+        mercurial \
+        subversion && \
+    apt-get clean
