@@ -11,5 +11,6 @@ RUN apt-get update && \
         lsb-release \
         mercurial \
         subversion \
-        unzip && \
+        unzip \
+        wget && \
     apt-get clean
