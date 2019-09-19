@@ -1,0 +1,33 @@
+# Dockerfile for CentOS
+# Currently used as "unsupported" linux test version
+
+FROM centos:latest
+
+ENV PATH=/opt/gnat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+    # BASE TOOLS
+RUN yum install -y \
+        epel-release \
+        fontconfig \
+        gcc \
+        git \
+        libX11 \
+        make \
+        mercurial \
+        subversion \
+        unzip \
+        wget && \
+\
+    # PYTHON PIP (for e3)
+    yum install -y \
+        python-devel \
+        python-pip && \
+\
+    # e3 TESTSUITE
+    pip install --upgrade pip && \
+    pip install e3-testsuite && \
+\
+    # GNAT COMMUNITY
+    wget http://mirrors.cdn.adacore.com/art/5cdffc5409dcd015aaf82626 -O gnat.bin && \
+    git clone https://github.com/AdaCore/gnat_community_install_script && \
+    ./gnat_community_install_script/install_package.sh /gnat.bin /opt/gnat
