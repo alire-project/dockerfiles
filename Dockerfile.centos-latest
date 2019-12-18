@@ -7,6 +7,7 @@ ENV PATH=/opt/gnat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 
     # BASE TOOLS
 RUN yum install -y \
+        curl \
         epel-release \
         fontconfig \
         gcc \
