@@ -19,10 +19,10 @@ RUN yum install -y \
         unzip \
         wget && \
 \
-    # PYTHON PIP (for e3)
+    # PYTHON PIP v2 (for e3)
     yum install -y \
-        python-devel \
-        python-pip && \
+        python2-devel \
+        python2-pip && \
 \
     # e3 TESTSUITE
     pip install --upgrade pip && \
