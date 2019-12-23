@@ -13,6 +13,7 @@ RUN yum install -y \
         gcc \
         git \
         libX11 \
+        libX11-xcb \
         make \
         mercurial \
         redhat-rpm-config \
