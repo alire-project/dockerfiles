@@ -15,6 +15,7 @@ RUN yum install -y \
         libX11 \
         make \
         mercurial \
+        redhat-rpm-config \
         subversion \
         unzip \
         wget && \
@@ -25,8 +26,8 @@ RUN yum install -y \
         python2-pip && \
 \
     # e3 TESTSUITE
-    pip install --upgrade pip && \
-    pip install e3-testsuite && \
+    pip2 install --upgrade pip && \
+    pip2 install e3-testsuite && \
 \
     # GNAT COMMUNITY
     wget http://mirrors.cdn.adacore.com/art/5cdffc5409dcd015aaf82626 -O gnat.bin && \
