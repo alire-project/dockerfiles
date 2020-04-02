@@ -13,6 +13,7 @@ RUN apt-get update && \
         mercurial \
         python-pip \
         subversion \
+        sudo \
         unzip \
         wget && \
     apt-get clean && \

@@ -18,6 +18,7 @@ RUN yum install -y \
         mercurial \
         redhat-rpm-config \
         subversion \
+        sudo \
         unzip \
         wget && \
 \
