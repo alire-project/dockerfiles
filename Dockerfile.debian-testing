@@ -10,11 +10,11 @@ RUN apt-get update && \
         gnat \
         gprbuild \
         mercurial \
-        python-pip \
+        python3-pip \
         subversion \
         sudo \
         unzip \
         wget && \
     apt-get clean && \
 \
-    pip install e3-testsuite
+    pip3 install e3-testsuite
