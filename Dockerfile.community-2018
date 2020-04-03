@@ -18,18 +18,20 @@ RUN apt-get update && \
         libc-dev \
         libx11-6 \
         libx11-xcb1 \
-        make && \
-    curl -sSf
-https://community.download.adacore.com/v1/10360eb85955d40f340f672441e8415cb0877fcc?filename=gnat-community-2018-20180528-x86_64-linux-bin \
-        --output /tmp/gnat-community-2018-20180528-x86_64-linux-bin && \
+        make \
+        wget && \
+\
+    wget https://community.download.adacore.com/v1/10360eb85955d40f340f672441e8415cb0877fcc?filename=gnat-community-2018-20180528-x86_64-linux-bin \
+        -O /tmp/gnat.bin && \
     git clone https://github.com/AdaCore/gnat_community_install_script && \
     cd gnat_community_install_script && \
-    ./install_package.sh /tmp/gnat-community-2018-20180528-x86_64-linux-bin /opt/gnat && \
+    ./install_package.sh /tmp/gnat.bin /opt/gnat && \
+    rm /tmp/gnat.bin && \
+\
     apt-get install -y \
         bash \
         git \
         mercurial \
         subversion \
-        unzip \
-        wget && \
+        unzip && \
     apt-get clean
