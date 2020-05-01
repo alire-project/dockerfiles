@@ -10,6 +10,7 @@ RUN apt-get update && \
         git \
         gnat \
         gprbuild \
+        make \
         mercurial \
         python2 \
         python2-dev \
