@@ -22,14 +22,10 @@ RUN yum install -y \
         unzip \
         wget && \
 \
-    # PYTHON PIP v2 (for e3)
+    # PYTHON PIP v3 (for e3)
     yum install -y \
-        python2-devel \
-        python2-pip && \
-\
-    # e3 TESTSUITE
-    pip2 install --upgrade pip && \
-    pip2 install e3-testsuite && \
+        python36-devel \
+        python3 && \
 \
     # GNAT COMMUNITY
     wget https://community.download.adacore.com/v1/4d99b7b2f212c8efdab2ba8ede474bb9fa15888d?filename=gnat-2020-20200429-x86_64-linux-bin \
