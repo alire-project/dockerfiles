@@ -24,8 +24,8 @@ RUN yum install -y \
 \
     # PYTHON PIP v3 (for e3)
     yum install -y \
-        python36-devel \
-        python3 && \
+        python38-devel \
+        python38 && \
 \
     # GNAT COMMUNITY
     wget https://community.download.adacore.com/v1/4d99b7b2f212c8efdab2ba8ede474bb9fa15888d?filename=gnat-2020-20200429-x86_64-linux-bin \
