@@ -3,7 +3,8 @@
 # latest is actually latest LTS
 FROM ubuntu:latest  
 
-RUN apt-get update && \
+RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime && \
+    apt-get update && \
     apt-get install -y \
         bash \
         curl \
@@ -17,6 +18,7 @@ RUN apt-get update && \
         python3-pip \
         subversion \
         sudo \
+        tzdata \
         unzip \
         wget && \
     apt-get clean
