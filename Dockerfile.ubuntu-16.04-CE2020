@@ -1,0 +1,39 @@
+# Dockerfile for Community 2019 edition (on debian)
+
+FROM ubuntu:16.04
+
+ENV PATH=/opt/gnat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# BOOTSTRAP MINIMAL INSTALLATION
+RUN apt-get update && \
+    apt-get install -y \
+        curl \
+        dbus \
+        fontconfig \
+        git \
+        libc-dev \
+        libx11-6 \
+        libx11-xcb1 \
+        make \
+        wget && \
+\
+    # GNAT INSTALLATION
+    wget https://community.download.adacore.com/v1/4d99b7b2f212c8efdab2ba8ede474bb9fa15888d?filename=gnat-2020-20200429-x86_64-linux-bin \
+        -O /tmp/gnat.bin && \
+    git clone https://github.com/AdaCore/gnat_community_install_script && \
+    cd gnat_community_install_script && \
+    ./install_package.sh /tmp/gnat.bin /opt/gnat && \
+    rm /tmp/gnat.bin && \
+\
+    # OTHER TOOLS INSTALLATION
+    apt-get install -y \
+        bash \
+        git \
+        libpython3-dev \
+        mercurial \
+        python3-dev \
+        python3-pip \ 
+        subversion \
+        sudo \
+        unzip && \
+    apt-get clean
