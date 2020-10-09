@@ -1,0 +1,19 @@
+# Dockerfile for Ubuntu LTS GNAT
+
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install -y \
+        bash \
+        curl \
+        git \
+        gnat \
+        gprbuild \
+        mercurial \
+        python-pip \
+        subversion \
+        unzip \
+        wget && \
+    apt-get clean && \
+\
+    pip install e3-testsuite
