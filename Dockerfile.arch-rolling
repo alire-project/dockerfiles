@@ -1,0 +1,39 @@
+# Dockerfile for Arch rolling release GNAT
+
+FROM archlinux
+
+RUN pacman --noconfirm -Syu bash \
+    curl \
+    git \
+    gcc-ada \
+    make \
+    mercurial \
+    python \
+    python-pip \
+    subversion \
+    sudo \
+    unzip \
+    wget \
+    fakeroot
+
+# gprbuild is not in official Arch repositories : it must be built separately from AUR
+
+# Add a 'build' user to be able to create the package
+RUN useradd --no-create-home --shell=/bin/false build && usermod -L build
+RUN echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Force generation of .tar.zst packages
+RUN echo "PKGEXT='.pkg.tar.zst'" >> /etc/makepkg.conf
+
+# Build the package as 'build' user
+USER build
+RUN cd /tmp && \
+    git clone https://aur.archlinux.org/gprbuild-bootstrap.git && \
+    cd /tmp/gprbuild-bootstrap && \
+    makepkg -s
+
+# Install the package as 'root' user
+USER root
+RUN pacman --noconfirm -U /tmp/gprbuild-bootstrap/*.pkg.tar.zst
+
