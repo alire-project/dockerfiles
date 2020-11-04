@@ -6,6 +6,7 @@ RUN pacman --noconfirm -Syu bash \
     curl \
     git \
     gcc-ada \
+    make \
     mercurial \
     python \
     python-pip \
