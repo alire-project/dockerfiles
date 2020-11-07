@@ -1,0 +1,21 @@
+# Dockerfile for latest Fedora version
+
+FROM fedora:latest
+
+RUN dnf -y install bash \
+    bzip2 \
+    curl \
+    git \
+    gcc-gnat \
+    gprbuild \
+    make \
+    mercurial \
+    python3 \
+    python3-devel \
+    python3-pip \
+    subversion \
+    sudo \
+    unzip \
+    wget \
+    fakeroot
+
