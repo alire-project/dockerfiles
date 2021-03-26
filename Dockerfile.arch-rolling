@@ -2,7 +2,10 @@
 
 FROM archlinux
 
-RUN pacman --noconfirm -Syu bash \
+# First curl is a temporary workaround for https://www.reddit.com/r/archlinux/comments/lek2ba/arch_linux_on_docker_ci_could_not_find_or_read/
+RUN \
+    curl -fsSL "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" | bsdtar -C / -xvf - && \
+    pacman --noconfirm -Syu bash \
     curl \
     git \
     gcc-ada \
@@ -36,4 +39,3 @@ RUN cd /tmp && \
 # Install the package as 'root' user
 USER root
 RUN pacman --noconfirm -U /tmp/gprbuild-bootstrap/*.pkg.tar.zst
-
