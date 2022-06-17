@@ -1,0 +1,41 @@
+# Dockerfile for CentOS
+# Currently used as "unsupported" linux test version
+
+FROM quay.io/centos/centos:stream
+# CentOS has moved to a rolling release model
+
+ENV PATH=/opt/gnat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+    # BASE TOOLS
+RUN yum install -y \
+        bzip2 \
+        curl \
+        epel-release \
+        fontconfig \
+        gcc \
+        git \
+        libX11 \
+        libX11-xcb \
+        make \
+        mercurial \
+        redhat-rpm-config \
+        subversion \
+        sudo \
+        unzip \
+        wget && \
+\
+    # PYTHON PIP v3 (for e3)
+    yum install -y \
+        python38-devel \
+        python38 && \
+\
+    # GNAT FSF via alr
+    wget https://github.com/alire-project/alire/releases/download/v1.2.0/alr-1.2.0-bin-x86_64-linux.zip \
+        -O /tmp/alr.zip && \
+    unzip /tmp/alr.zip -d /tmp && \
+    cp /tmp/bin/alr /usr/bin/alr && \
+    chmod +x /usr/bin/alr && \
+    alr toolchain --install gnat_native gprbuild --install-dir /opt && \
+    rm /usr/bin/alr && \
+    mv /opt/gnat* /opt/gnat && \
+    gnat --version
