@@ -2,7 +2,8 @@
 
 FROM fedora:latest
 
-RUN dnf -y install bash \
+RUN dnf makecache && \
+    dnf -y install bash \
     bzip2 \
     curl \
     git \
