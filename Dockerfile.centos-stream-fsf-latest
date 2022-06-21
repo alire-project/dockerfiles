@@ -4,7 +4,7 @@
 FROM quay.io/centos/centos:stream
 # CentOS has moved to a rolling release model
 
-ENV PATH=/opt/gnat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/opt/gnat/bin:/opt/gprbuild/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
     # Refresh rolling repositories
 RUN yum makecache && \
@@ -40,4 +40,5 @@ RUN yum makecache && \
     alr toolchain --install gnat_native gprbuild --install-dir /opt && \
     rm /usr/bin/alr && \
     mv /opt/gnat* /opt/gnat && \
+    mv /opt/gprbuild* /opt/gprbuild && \
     gnat --version
