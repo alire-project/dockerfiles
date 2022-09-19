@@ -1,0 +1,39 @@
+# Dockerfile for latest openSUSE Tumbleweed release
+
+FROM opensuse/tumbleweed:latest
+
+ENV PATH=/opt/gprbuild/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+RUN zypper --non-interactive dist-upgrade && \
+    zypper --non-interactive --no-refresh install \
+        bzip2 \
+        gcc-ada \
+        git-core \
+        gzip \
+        make \
+        mercurial \
+        python3 \
+        python3-devel \
+        python3-pip \
+        subversion \
+        sudo \
+        tar \
+        unzip \
+        wget \
+        fakeroot && \
+\
+    # GPRbuild via alr
+    mkdir /tmp/zzz-alr && \
+    wget -O /tmp/zzz-alr/alr.zip \
+        https://github.com/alire-project/alire/releases/download/v1.2.1/alr-1.2.1-bin-x86_64-linux.zip && \
+    unzip /tmp/zzz-alr/alr.zip -d /tmp/zzz-alr && \
+    cp /tmp/zzz-alr/bin/alr /usr/bin/alr && \
+    rm -rf /tmp/zzz-alr && \
+    chmod +x /usr/bin/alr && \
+    chmod u+w /opt && \
+    alr toolchain --install gprbuild --install-dir /opt && \
+    rm /usr/bin/alr && \
+    rm -rf /root/.config/alire && \
+    mv /opt/gprbuild* /opt/gprbuild && \
+    wget -O /opt/gprbuild/share/gprconfig/compilers.xml \
+        https://github.com/AdaCore/gprconfig_kb/raw/master/db/compilers.xml
