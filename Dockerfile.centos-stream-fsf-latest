@@ -29,10 +29,10 @@ RUN yum makecache && \
     # PYTHON PIP v3 (for e3)
     yum install -y \
         python38-devel \
-        python38 && \
-\
-    # GNAT FSF via alr
-    wget https://github.com/alire-project/alire/releases/download/v1.2.0/alr-1.2.0-bin-x86_64-linux.zip \
+        python38
+
+# GNAT FSF via alr
+RUN wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip \
         -O /tmp/alr.zip && \
     unzip /tmp/alr.zip -d /tmp && \
     cp /tmp/bin/alr /usr/bin/alr && \
@@ -41,4 +41,5 @@ RUN yum makecache && \
     rm /usr/bin/alr && \
     mv /opt/gnat* /opt/gnat && \
     mv /opt/gprbuild* /opt/gprbuild && \
-    gnat --version
+    gnat --version && \
+    gprbuild --version
