@@ -2,8 +2,11 @@
 
 FROM archlinux
 
-# Start with forcing an up-to-date-rolling distro
-RUN pacman -Syy
+# Start with forcing an up-to-date-rolling distro with updated credentials
+RUN pacman-key --init && \
+    pacman -Syy --noconfirm && \
+    pacman -S --noconfirm archlinux-keyring && \
+    pacman -Suyy --noconfirm
 
 # First curl is a temporary workaround for https://www.reddit.com/r/archlinux/comments/lek2ba/arch_linux_on_docker_ci_could_not_find_or_read/
 RUN \
