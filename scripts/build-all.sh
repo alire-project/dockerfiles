@@ -12,6 +12,6 @@ for file in Dockerfile.*; do
     echo
     echo BUILDING $file...
     echo
-    docker build -q --pull -t "${registry}/docker/gnat:${file##*.}" -f $file .
+    build-one.sh $file
     echo DONE $file
 done

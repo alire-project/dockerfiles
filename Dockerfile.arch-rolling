@@ -19,6 +19,7 @@ RUN \
     mercurial \
     python \
     python-pip \
+    rsync \
     subversion \
     sudo \
     unzip \

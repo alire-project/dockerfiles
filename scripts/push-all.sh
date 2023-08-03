@@ -8,10 +8,5 @@ registry=${1:-ghcr.io/alire-project}
 docker login ghcr.io
 
 for file in Dockerfile.*; do
-    (
-        trap 'echo "Error with Dockerfile: $file"' ERR
-        echo
-        echo PUSHING $file...
-        docker push ${registry}/docker/gnat:${file##*.}
-    )
+    push-one.sh $file
 done
