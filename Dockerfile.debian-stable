@@ -13,6 +13,7 @@ RUN apt-get update && \
         mercurial \
         python3-dev \
         python3-pip \
+        python3-venv \
         subversion \
         sudo \
         unzip \
