@@ -1,17 +1,17 @@
 # Dockerfile for CentOS
 # Currently used as "unsupported" linux test version
 
-FROM quay.io/centos/centos:stream
-# CentOS has moved to a rolling release model
+FROM quay.io/centos/centos:stream9
+# CentOS has moved to a rolling release mode
+# Stream 9 supported until 2027
 
 ENV PATH=/opt/gnat/bin:/opt/gprbuild/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
     # Refresh rolling repositories
-RUN yum makecache && \
+RUN dnf makecache && \
     # BASE TOOLS
-    yum install -y \
+    dnf install -y \
         bzip2 \
-        curl \
         epel-release \
         fontconfig \
         gcc \
@@ -19,17 +19,21 @@ RUN yum makecache && \
         libX11 \
         libX11-xcb \
         make \
-        mercurial \
         redhat-rpm-config \
         subversion \
         sudo \
         unzip \
-        wget && \
-\
-    # PYTHON PIP v3 (for e3)
-    yum install -y \
-        python38-devel \
-        python38
+        wget
+
+#        curl \         # Already included in base install
+
+# For some reason these are not found during the first install run ??
+RUN dnf install -y mercurial
+
+# PYTHON PIP v3 (for e3)
+RUN dnf install -y \
+        python3-devel \
+        python3
 
 # GNAT FSF via alr
 RUN wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip \
