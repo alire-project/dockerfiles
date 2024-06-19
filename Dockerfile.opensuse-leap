@@ -1,0 +1,37 @@
+# Dockerfile for openSUSE Leap
+
+FROM opensuse/leap
+
+RUN zypper ref
+
+# The default Ada compiler, gcc-ada, is extraordinarily old (gcc 7), but it is
+# required by gprbuild from SUSE as it is the system compiler.
+
+RUN zypper -n install \
+        bash \
+        curl \
+        git \
+        gcc-ada \
+        jq \
+        python3-devel \
+        mercurial \
+        python3-pip \
+        python3-virtualenv \
+        subversion \
+        sudo \
+        unzip \
+        wget
+
+# Gprbuild is not available in the openSUSE Leap repositories, so we manually
+# install the one from the Tumbleweed repo, which is apparently compatible.
+
+RUN wget https://download.opensuse.org/repositories/home:/vibondare:/devel:/languages:/Ada/openSUSE_Tumbleweed/x86_64/gprbuild-24.0.0-6.85.x86_64.rpm && \
+    zypper --no-refresh -n --no-gpg-checks install gprbuild-24.0.0-6.85.x86_64.rpm && \
+    rm gprbuild-24.0.0-6.85.x86_64.rpm
+
+RUN gnat --version && \
+    gprbuild --version
+
+# We purposely dont clean the zypper cache to avoid a lenghtly refresh during
+# external detections, as even with --no-refresh, it will do a refresh if there
+# is no cache at all.

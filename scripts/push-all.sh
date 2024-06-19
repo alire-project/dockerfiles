@@ -8,5 +8,5 @@ registry=${1:-ghcr.io/alire-project}
 docker login ghcr.io
 
 for file in Dockerfile.*; do
-    push-one.sh $file
+    scripts/push-one.sh $file
 done

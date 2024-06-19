@@ -12,6 +12,6 @@ for file in Dockerfile.*; do
     echo
     echo BUILDING $file...
     echo
-    build-one.sh $file
+    scripts/build-one.sh $file
     echo DONE $file
 done

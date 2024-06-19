@@ -1,7 +1,7 @@
 # Dockerfile for Ubuntu LTS GNAT
 
 # latest is actually latest LTS
-FROM ubuntu:latest  
+FROM ubuntu:latest
 
 RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime && \
     apt-get update && \
@@ -11,15 +11,18 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime && \
         git \
         gnat \
         gprbuild \
+        jq \
         libpython3-dev \
         make \
         mercurial \
         python3-dev \
         python3-pip \
-        python3.10-venv \
+        python3-venv \
         subversion \
         sudo \
         tzdata \
         unzip \
         wget && \
     apt-get clean
+
+RUN gnat --version && gprbuild --version

@@ -16,6 +16,7 @@ RUN dnf makecache && \
         fontconfig \
         gcc \
         git \
+        jq \
         libX11 \
         libX11-xcb \
         make \
@@ -36,12 +37,13 @@ RUN dnf install -y \
         python3
 
 # GNAT FSF via alr
-RUN wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip \
+RUN wget https://github.com/alire-project/alire/releases/download/v2.0.1/alr-2.0.1-bin-x86_64-linux.zip \
         -O /tmp/alr.zip && \
     unzip /tmp/alr.zip -d /tmp && \
     cp /tmp/bin/alr /usr/bin/alr && \
     chmod +x /usr/bin/alr && \
-    alr toolchain --install gnat_native gprbuild --install-dir /opt && \
+    alr -C /opt get gnat_native && \
+    alr -C /opt get gprbuild && \
     rm /usr/bin/alr && \
     mv /opt/gnat* /opt/gnat && \
     mv /opt/gprbuild* /opt/gprbuild && \
