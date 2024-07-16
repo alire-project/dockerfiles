@@ -25,4 +25,6 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime && \
         wget && \
     apt-get clean
 
-RUN gnat --version && gprbuild --version
+RUN cat /etc/os-release && \
+    gnat --version && \
+    gprbuild --version

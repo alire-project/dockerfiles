@@ -46,6 +46,8 @@ RUN wget https://github.com/alire-project/alire/releases/download/v2.0.1/alr-2.0
     alr -C /opt get gprbuild && \
     rm /usr/bin/alr && \
     mv /opt/gnat* /opt/gnat && \
-    mv /opt/gprbuild* /opt/gprbuild && \
+    mv /opt/gprbuild* /opt/gprbuild
+
+RUN cat /etc/os-release && \
     gnat --version && \
     gprbuild --version

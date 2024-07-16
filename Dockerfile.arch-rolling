@@ -50,4 +50,6 @@ RUN cd /tmp && \
 USER root
 RUN pacman --noconfirm -U /tmp/gprbuild-bootstrap/*.pkg.tar.zst
 
-RUN gnat --version && gprbuild --version
+RUN cat /etc/os-release && \
+    gnat --version && \
+    gprbuild --version

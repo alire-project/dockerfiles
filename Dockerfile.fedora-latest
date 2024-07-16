@@ -23,4 +23,6 @@ RUN dnf makecache && \
     which \
     fakeroot
 
-RUN gnat --version && gprbuild --version
+RUN cat /etc/os-release && \
+    gnat --version && \
+    gprbuild --version
