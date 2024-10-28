@@ -9,9 +9,10 @@ ENV PATH=/opt/gnat/bin:/opt/gprbuild/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 
     # Refresh rolling repositories
 RUN dnf makecache && \
-    # BASE TOOLS
-    dnf install -y \
+    # BASE TOOLS. --allowerasing needed for curl to replace curl-minimal
+    dnf install -y --allowerasing \
         bzip2 \
+        curl \
         epel-release \
         fontconfig \
         gcc \
@@ -26,7 +27,9 @@ RUN dnf makecache && \
         unzip \
         wget
 
-#        curl \         # Already included in base install
+# The base install uses curl-minimal, which causes a conflict the moment one of
+# our crates tries to install the regular curl. So, have it installed already
+# here.
 
 # For some reason these are not found during the first install run ??
 RUN dnf install -y mercurial
@@ -37,7 +40,7 @@ RUN dnf install -y \
         python3
 
 # GNAT FSF via alr
-RUN wget https://github.com/alire-project/alire/releases/download/v2.0.1/alr-2.0.1-bin-x86_64-linux.zip \
+RUN wget https://github.com/alire-project/alire/releases/download/v2.0.2/alr-2.0.2-bin-x86_64-linux.zip \
         -O /tmp/alr.zip && \
     unzip /tmp/alr.zip -d /tmp && \
     cp /tmp/bin/alr /usr/bin/alr && \
