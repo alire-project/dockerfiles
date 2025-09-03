@@ -39,14 +39,14 @@ RUN dnf install -y \
         python3-devel \
         python3
 
-# GNAT FSF via alr
-RUN wget https://github.com/alire-project/alire/releases/download/v2.0.2/alr-2.0.2-bin-x86_64-linux.zip \
+# GNAT FSF via alr (NOTE major versions to be compatible with CentOS glibc<2.35
+RUN wget https://github.com/alire-project/alire/releases/download/v2.1.0/alr-2.1.0-bin-x86_64-linux.zip \
         -O /tmp/alr.zip && \
     unzip /tmp/alr.zip -d /tmp && \
     cp /tmp/bin/alr /usr/bin/alr && \
     chmod +x /usr/bin/alr && \
-    alr -C /opt get gnat_native && \
-    alr -C /opt get gprbuild && \
+    alr -C /opt get gnat_native^14 && \
+    alr -C /opt get gprbuild^22 && \
     rm /usr/bin/alr && \
     mv /opt/gnat* /opt/gnat && \
     mv /opt/gprbuild* /opt/gprbuild
