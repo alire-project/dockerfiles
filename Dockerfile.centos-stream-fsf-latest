@@ -13,6 +13,7 @@ RUN dnf makecache && \
     dnf install -y --allowerasing \
         bzip2 \
         curl \
+        diffutils \
         epel-release \
         fontconfig \
         gcc \
