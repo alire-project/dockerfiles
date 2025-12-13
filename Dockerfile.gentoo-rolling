@@ -1,0 +1,37 @@
+# Dockerfile for Gentoo rolling release GNAT
+
+FROM gentoo/stage3
+
+# Disable bits which don't work within Docker.
+RUN echo 'FEATURES="-ipc-sandbox -pid-sandbox -network-sandbox -usersandbox -mount-sandbox -sandbox"' | cat >> /etc/portage/make.conf
+# Speed things up a bit.
+RUN echo 'FEATURES="${FEATURES} parallel-install parallel-fetch -merge-sync"' | cat >> /etc/portage/make.conf
+RUN echo "EMERGE_DEFAULT_OPTS='--jobs=$(nproc) --load-average=$(nproc)'" | cat >> /etc/portage/make.conf
+# Use binary packages to not build everything from source.
+RUN echo 'FEATURES="${FEATURES} binpkg-request-signature"' | cat >> /etc/portage/make.conf
+RUN echo 'EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg=y --autounmask-write --autounmask-continue --autounmask-keep-keywords=y --autounmask-use=y"' | cat >> /etc/portage/make.conf
+
+# Update repository.
+RUN emerge-webrsync -q
+
+# Generate binpkg verification keyring. Do this separately from the first
+# emerge call to allow Docker to cache it by itself.
+RUN getuto
+
+# Set some options to match what the binpkg is built for, so we pick it up.
+RUN echo 'sys-devel/gcc d jit lto objc objc++ pgo' | cat >> /etc/portage/package.use/gcc
+
+RUN emerge --quiet --quiet-build=y \
+    app-arch/unzip \
+    app-misc/jq \
+    net-misc/curl \
+    dev-python/pip \
+    dev-vcs/git \
+    dev-vcs/mercurial \
+    dev-vcs/subversion \
+    dev-ada/gprbuild \
+    sys-apps/which
+
+RUN cat /etc/os-release && \
+    gnat --version && \
+    gprbuild --version
