@@ -21,16 +21,24 @@ RUN getuto
 # Set some options to match what the binpkg is built for, so we pick it up.
 RUN echo 'sys-devel/gcc d jit lto objc objc++ pgo' | cat >> /etc/portage/package.use/gcc
 
+# eix: tools to query Portage efficiently
+# sudo: needed for alr to install system packages
+
 RUN emerge --quiet --quiet-build=y \
+    app-admin/sudo \
     app-arch/unzip \
     app-misc/jq \
+    app-portage/eix \
     net-misc/curl \
     dev-python/pip \
     dev-vcs/git \
     dev-vcs/mercurial \
     dev-vcs/subversion \
-    dev-ada/gprbuild \
     sys-apps/which
+
+# GNAT FSF (separate given its size)
+RUN emerge --quiet --quiet-build=y \
+    dev-ada/gprbuild
 
 RUN cat /etc/os-release && \
     gnat --version && \
