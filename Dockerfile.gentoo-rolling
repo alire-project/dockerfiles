@@ -1,15 +1,19 @@
 # Dockerfile for Gentoo rolling release GNAT
 
-FROM gentoo/stage3
+# Pinned to a specific date tag for reproducible builds. Update intentionally when
+# bumping the base toolchain.
+FROM gentoo/stage3:20260518
 
-# Disable bits which don't work within Docker.
-RUN echo 'FEATURES="-ipc-sandbox -pid-sandbox -network-sandbox -usersandbox -mount-sandbox -sandbox"' | cat >> /etc/portage/make.conf
-# Speed things up a bit.
-RUN echo 'FEATURES="${FEATURES} parallel-install parallel-fetch -merge-sync"' | cat >> /etc/portage/make.conf
-RUN echo "EMERGE_DEFAULT_OPTS='--jobs=$(nproc) --load-average=$(nproc)'" | cat >> /etc/portage/make.conf
-# Use binary packages to not build everything from source.
-RUN echo 'FEATURES="${FEATURES} binpkg-request-signature"' | cat >> /etc/portage/make.conf
-RUN echo 'EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg=y --autounmask-write --autounmask-continue --autounmask-keep-keywords=y --autounmask-use=y"' | cat >> /etc/portage/make.conf
+# Disable sandboxing features that don't work inside Docker, enable parallel builds,
+# and prefer binary packages.
+# --autounmask-* removed: silently pulled in ~arch/unstable packages without review.
+# --load-average removed: in containers it reflects host total load and can stall emerge.
+# --jobs=$(nproc) is evaluated at build time and baked in; override with --build-arg if needed.
+RUN echo 'FEATURES="-ipc-sandbox -pid-sandbox -network-sandbox -usersandbox -mount-sandbox -sandbox"' >> /etc/portage/make.conf && \
+    echo 'FEATURES="${FEATURES} parallel-install parallel-fetch -merge-sync"' >> /etc/portage/make.conf && \
+    echo "EMERGE_DEFAULT_OPTS='--jobs=$(nproc)'" >> /etc/portage/make.conf && \
+    echo 'FEATURES="${FEATURES} binpkg-request-signature"' >> /etc/portage/make.conf && \
+    echo 'EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg=y"' >> /etc/portage/make.conf
 
 # Update repository.
 RUN emerge-webrsync -q
@@ -18,8 +22,18 @@ RUN emerge-webrsync -q
 # emerge call to allow Docker to cache it by itself.
 RUN getuto
 
-# Set some options to match what the binpkg is built for, so we pick it up.
-RUN echo 'sys-devel/gcc d jit lto objc objc++ pgo' | cat >> /etc/portage/package.use/gcc
+# These USE flags must match the Gentoo binary package exactly so Portage accepts it
+# rather than attempting a source build. Building GCC with 'ada' from source causes a
+# circular dependency (needs an Ada compiler to compile Ada support in GCC). The pgo/lto
+# here are Gentoo's official binary — not a local build — so they don't cause the
+# collect2 instability that a locally-compiled PGO/LTO GCC would.
+RUN echo 'sys-devel/gcc ada d jit lto objc objc++ pgo' >> /etc/portage/package.use/gcc
+
+# No gcc_14 pin for gprbuild: let it build from source targeting gcc_15. The binary
+# package only exists for gcc_14, but a source build is fast (~minutes) and gives a
+# clean single-slot toolchain where the unversioned 'gnat' works out of the box.
+# The circular dep that previously blocked this is gone because GCC 15 now comes from
+# a binary (above), not a source build.
 
 # eix: tools to query Portage efficiently
 # sudo: needed for alr to install system packages
@@ -39,6 +53,9 @@ RUN emerge --quiet --quiet-build=y \
 # GNAT FSF (separate given its size)
 RUN emerge --quiet --quiet-build=y \
     dev-ada/gprbuild
+
+# Remove Portage download/binary caches; not needed at runtime and can be large.
+RUN rm -rf /var/cache/distfiles/* /var/cache/binpkgs/* /var/tmp/portage/*
 
 RUN cat /etc/os-release && \
     gnat --version && \
