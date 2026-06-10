@@ -1,20 +1,24 @@
 # Dockerfile for CentOS
 # Currently used as "unsupported" linux test version
 
-FROM quay.io/centos/centos:stream9
+FROM quay.io/centos/centos:stream10
 # CentOS has moved to a rolling release mode
-# Stream 9 supported until 2027
+# Stream 10 supported until 2030
 
 ENV PATH=/opt/gnat/bin:/opt/gprbuild/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-    # Refresh rolling repositories
+# BASE TOOLS
+# EPEL must be installed in its own transaction, or packages coming from it
+# (mercurial) are not found in the next one.
+# --allowerasing needed for curl to replace the preinstalled curl-minimal,
+# which otherwise conflicts the moment one of our crates installs regular curl.
+# python3-devel is needed for e3.
 RUN dnf makecache && \
-    # BASE TOOLS. --allowerasing needed for curl to replace curl-minimal
+    dnf install -y epel-release && \
     dnf install -y --allowerasing \
         bzip2 \
         curl \
         diffutils \
-        epel-release \
         fontconfig \
         gcc \
         git \
@@ -22,33 +26,25 @@ RUN dnf makecache && \
         libX11 \
         libX11-xcb \
         make \
+        mercurial \
+        python3 \
+        python3-devel \
         redhat-rpm-config \
         subversion \
         sudo \
         unzip \
-        wget
+        wget && \
+    dnf clean all
 
-# The base install uses curl-minimal, which causes a conflict the moment one of
-# our crates tries to install the regular curl. So, have it installed already
-# here.
-
-# For some reason these are not found during the first install run ??
-RUN dnf install -y mercurial
-
-# PYTHON PIP v3 (for e3)
-RUN dnf install -y \
-        python3-devel \
-        python3
-
-# GNAT FSF via alr (NOTE major versions to be compatible with CentOS glibc<2.35
-RUN wget https://github.com/alire-project/alire/releases/download/v2.1.0/alr-2.1.0-bin-x86_64-linux.zip \
+# GNAT FSF via alr
+ARG ALR_VERSION=2.1.1
+RUN wget https://github.com/alire-project/alire/releases/download/v${ALR_VERSION}/alr-${ALR_VERSION}-bin-x86_64-linux.zip \
         -O /tmp/alr.zip && \
     unzip /tmp/alr.zip -d /tmp && \
-    cp /tmp/bin/alr /usr/bin/alr && \
-    chmod +x /usr/bin/alr && \
-    alr -C /opt get gnat_native^14 && \
-    alr -C /opt get gprbuild^22 && \
-    rm /usr/bin/alr && \
+    chmod +x /tmp/bin/alr && \
+    /tmp/bin/alr -C /opt get gnat_native && \
+    /tmp/bin/alr -C /opt get gprbuild && \
+    rm -rf /tmp/alr.zip /tmp/bin && \
     mv /opt/gnat* /opt/gnat && \
     mv /opt/gprbuild* /opt/gprbuild
 
